@@ -32,7 +32,7 @@ export default async function handler(req, res) {
       const emailContent = `
         <h1>Call Analyzed Details</h1>
         <p><strong>Call ID:</strong> ${call_id}</p>
-        <p><strong>Campaign Name:</strong> ${campaign_name}</p>
+        <p><strong>Campaign Name:</strong> Mega Bee Rescues & Pest Control</p>
         <p><strong>Customer Name:</strong> ${customer_name}</p>
         <p><strong>Phone Number:</strong> ${from_number}</p>
         <p><strong>Email:</strong> ${email_address}</p>
