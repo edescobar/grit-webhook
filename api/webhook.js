@@ -48,8 +48,8 @@ export default async function handler(req, res) {
       try {
         // Send email using Resend
         await resend.emails.send({
-          from: "Mega Bee <santiago@sidetool.co>",
-          to: "santi_mille@hotmail.com",
+          from: "santi_mille@hotmail.com",
+          to: "santiago@sidetool.co",
           subject: "Call Analysis Report",
           html: emailContent,
         });
