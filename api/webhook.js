@@ -20,11 +20,10 @@ export default async function handler(req, res) {
               email_address = "N/A",
               target_pest = "N/A",
               scheduled_time = "N/A",
+              user_phone_number = "N/A",
             } = {},
             call_summary = "N/A",
           } = {},
-          retell_llm_dynamic_variables: { from_number = "N/A" } = {},
-          campaign_name = "N/A",
         },
       } = payload;
 
@@ -34,7 +33,7 @@ export default async function handler(req, res) {
         <p><strong>Call ID:</strong> ${call_id}</p>
         <p><strong>Campaign Name:</strong> Mega Bee Rescues & Pest Control</p>
         <p><strong>Customer Name:</strong> ${customer_name}</p>
-        <p><strong>Phone Number:</strong> ${from_number}</p>
+        <p><strong>Phone Number:</strong> ${user_phone_number}</p>
         <p><strong>Email:</strong> ${email_address}</p>
         <p><strong>Target Pest:</strong> ${target_pest}</p>
         <p><strong>Scheduled Date & Time:</strong> ${scheduled_time}</p>
