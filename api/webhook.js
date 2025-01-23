@@ -1,12 +1,13 @@
-import { Resend } from 'resend';
+import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY); // Ensure the Resend API key is in your environment variables
 
 export default async function handler(req, res) {
-  if (req.method === 'POST') {
+  if (req.method === "POST") {
     const payload = req.body;
+    console.log(JSON.stringify(payload));
 
-    if (payload.event === 'call_analyzed') {
+    /* if (payload.event === "call_analyzed") {
       // Extract necessary information
       const {
         call: {
@@ -17,18 +18,18 @@ export default async function handler(req, res) {
               customer_name,
               email_address,
               target_pest,
-              scheduled_time
+              scheduled_time,
             } = {},
-            call_summary
+            call_summary,
           } = {},
-          recording_url
-        }
+          recording_url,
+        },
       } = payload;
 
-      const phoneNumber = payload.call.data?.phone_number || 'N/A';
-      const address = payload.call.data?.address || 'N/A';
-      const callType = payload.call.call_type || 'N/A';
-      const campaignName = payload.call.campaign_name || 'N/A';
+      const phoneNumber = payload.call.data?.phone_number || "N/A";
+      const address = payload.call.data?.address || "N/A";
+      const callType = payload.call.call_type || "N/A";
+      const campaignName = payload.call.campaign_name || "N/A";
 
       // Email content
       const emailContent = `
@@ -38,7 +39,9 @@ export default async function handler(req, res) {
         <p><strong>Phone Number:</strong> ${phoneNumber}</p>
         <p><strong>Email:</strong> ${email_address}</p>
         <p><strong>Address:</strong> ${address}</p>
-        <p><strong>Scheduled Date & Time:</strong> ${scheduled_time || 'N/A'}</p>
+        <p><strong>Scheduled Date & Time:</strong> ${
+          scheduled_time || "N/A"
+        }</p>
         <p><strong>Target Pest:</strong> ${target_pest}</p>
         <p><strong>Call Type:</strong> ${callType}</p>
         <p><strong>Call Status:</strong> ${call_status}</p>
@@ -49,20 +52,20 @@ export default async function handler(req, res) {
       try {
         // Send email using Resend
         await resend.emails.send({
-          from: 'Mega Bee <santiago@sidetool.co>', // Replace with your desired sender address
-          to: 'santi_mille@hotmail.com',
-          subject: 'Call Analysis Report',
-          html: emailContent
+          from: "Mega Bee <santiago@sidetool.co>", // Replace with your desired sender address
+          to: "santi_mille@hotmail.com",
+          subject: "Call Analysis Report",
+          html: emailContent,
         });
 
-        console.log('Email sent successfully');
+        console.log("Email sent successfully");
       } catch (error) {
-        console.error('Error sending email:', error);
+        console.error("Error sending email:", error);
       }
-    }
+    } */
 
-    res.status(200).send('Webhook processed');
+    res.status(200).send("Webhook processed");
   } else {
-    res.status(404).send('Not Found');
+    res.status(404).send("Not Found");
   }
 }
