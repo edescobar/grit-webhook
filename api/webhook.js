@@ -72,7 +72,7 @@ export default async function handler(req, res) {
       `;
 
       try {
-        // Send email using Resend
+        // Send the email using Resend
         await resend.emails.send({
           from: "noreply@resend.dev",
           to: "santiago@sidetool.co",
