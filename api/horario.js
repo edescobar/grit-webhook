@@ -5,7 +5,7 @@ export default function handler(req, res) {
   
     const currentHour = new Date(guatemalaTime).getHours();
   
-    if (currentHour >= 6 && currentHour < 8) {
+    if (currentHour >= 6 && currentHour < 11) {
       return res.status(200).json({ result: "DESAYUNO" });
     } else {
       return res.status(200).json({ result: "ALMUERZO" });
