@@ -24,10 +24,18 @@ const CallsTable = () => {
       if (error) {
         console.error("Error fetching calls:", error);
       } else {
-        setCalls(data);
+        const totalDurations = calculateTotalDurations(data);
+        setCalls(
+          data.map((call) => ({
+            ...call,
+            totalMinutes: totalDurations[call.user_phone_number], // Añade minutos totales a cada llamada
+          }))
+        );
         if (data.length > 0) {
           setColumnNames(
-            Object.keys(data[0]).map((header) => _.startCase(header))
+            Object.keys(data[0])
+              .map((header) => _.startCase(header))
+              .concat("Total Minutes")
           );
         }
       }
@@ -36,6 +44,17 @@ const CallsTable = () => {
     fetchCalls();
   }, []);
 
+  const calculateTotalDurations = (calls) => {
+    return calls.reduce((acc, call) => {
+      const user = call.user_phone_number;
+      const minutes = call.duration_ms / 60000; // Convertir milisegundos a minutos
+      acc[user] = acc[user] || 0;
+      acc[user] += minutes;
+      return acc;
+    }, {});
+  };
+
+  console.log("Calls:", calls);
   return (
     <Box
       sx={{

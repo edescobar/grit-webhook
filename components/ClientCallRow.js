@@ -1,4 +1,3 @@
-"use client";
 import { TableCell, TableRow, Chip } from "@mui/material";
 
 const ClientCallRow = ({ call }) => {
@@ -74,26 +73,23 @@ const ClientCallRow = ({ call }) => {
           backgroundColor: "#f8fafc",
           transition: "background-color 0.2s ease-in-out",
         },
-        "& td": {
-          borderBottom: "1px solid #e2e8f0",
-          color: "#475569",
-          padding: "16px",
-        },
       }}
     >
+      <TableCell>{call.id}</TableCell>
       <TableCell>{call.call_id}</TableCell>
       <TableCell>{getStatusLabel(call.call_status)}</TableCell>
       <TableCell>{new Date(call.start_timestamp).toLocaleString()}</TableCell>
-      <TableCell>{call.duration}</TableCell>
+      <TableCell>{new Date(call.end_timestamp).toLocaleString()}</TableCell>
+      <TableCell>{call.duration_ms}ms</TableCell>
+      <TableCell>{call.transcript}</TableCell>
+      <TableCell>{call.recording_url}</TableCell>
       <TableCell>{call.customer_name}</TableCell>
-      <TableCell
-        sx={{
-          fontFamily: "monospace",
-          color: "#3b82f6",
-        }}
-      >
-        ${call.combined_cost.toFixed(2)}
-      </TableCell>
+      <TableCell>{call.email_address}</TableCell>
+      <TableCell>{call.target_pest}</TableCell>
+      <TableCell>{new Date(call.scheduled_time).toLocaleString()}</TableCell>
+      <TableCell>{call.user_phone_number}</TableCell>
+      <TableCell>{call.user_address}</TableCell>
+      <TableCell>{call.call_type}</TableCell>
       <TableCell
         sx={{
           maxWidth: "200px",
@@ -105,19 +101,12 @@ const ClientCallRow = ({ call }) => {
         {call.call_summary}
       </TableCell>
       <TableCell>{call.user_sentiment}</TableCell>
-      <TableCell>
-        <Chip
-          label={call.call_successful ? "Yes" : "No"}
-          size="small"
-          sx={{
-            backgroundColor: call.call_successful ? "#dcfce7" : "#fee2e2",
-            color: call.call_successful ? "#166534" : "#991b1b",
-            fontWeight: 500,
-          }}
-        />
-      </TableCell>
       <TableCell>{call.agent_task_completion_rating}</TableCell>
       <TableCell>{call.call_completion_rating}</TableCell>
+      <TableCell>${call.combined_cost.toFixed(2)}</TableCell>
+      <TableCell>
+        {call.totalMinutes ? call.totalMinutes.toFixed(2) : "0.00"} mins
+      </TableCell>
     </TableRow>
   );
 };
