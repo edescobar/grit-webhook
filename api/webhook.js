@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import supabase from "./supabaseClient"; // Asegúrate de que la ruta sea correcta.
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -43,7 +44,48 @@ export default async function handler(req, res) {
         1000
       ).toFixed(0)} secs`;
 
-      // Email content
+      // Intentar guardar en Supabase primero
+      const { data: supabaseData, error: supabaseError } = await supabase
+        .from("calls")
+        .insert([
+          {
+            call_id,
+            call_status,
+            start_timestamp,
+            end_timestamp,
+            duration: duration_ms,
+            transcript,
+            recording_url,
+            customer_name,
+            email_address,
+            target_pest,
+            scheduled_time,
+            user_phone_number,
+            user_address,
+            call_type,
+            call_summary,
+            user_sentiment,
+            agent_task_completion_rating,
+            call_completion_rating,
+            combined_cost,
+            call_successful: call_status === "ended" ? true : false,
+            call_cost: combined_cost,
+            call_duration: duration,
+            call_start_time: startTime,
+            call_end_time: end_timestamp,
+            call_transcript: transcript,
+            call_recording_url: recording_url,
+          },
+        ]);
+
+      if (supabaseError) {
+        console.error("Supabase Storage Error:", supabaseError);
+        return res
+          .status(500)
+          .json({ error: "Failed to save call data to Supabase" });
+      }
+
+      // Continuar con el envío del email
       const emailContent = `
         <h1>Call Analysis Report</h1>
         <p><strong>Date & Time:</strong> ${startTime}</p>
@@ -79,15 +121,16 @@ export default async function handler(req, res) {
           subject: "Call Analysis Report",
           html: emailContent,
         });
-
         console.log("Email sent successfully");
-      } catch (error) {
-        console.error("Error sending email:", error);
+        res
+          .status(200)
+          .json({ message: "Email sent and data saved", supabaseData });
+      } catch (emailError) {
+        console.error("Error sending email:", emailError);
+        res.status(500).json({ error: "Failed to send email", emailError });
       }
+    } else {
+      res.status(404).send("Not Found");
     }
-
-    res.status(200).send("Webhook processed");
-  } else {
-    res.status(404).send("Not Found");
   }
 }
