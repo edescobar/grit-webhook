@@ -1,4 +1,4 @@
-import { TableCell, TableRow, Chip } from "@mui/material";
+import { TableCell, TableRow, Chip, Tooltip } from "@mui/material";
 
 const ClientCallRow = ({ call }) => {
   const getStatusLabel = (status) => {
@@ -51,7 +51,7 @@ const ClientCallRow = ({ call }) => {
       default:
         return (
           <Chip
-            label="Unknown"
+            label="ended"
             sx={{
               minWidth: "90px",
               backgroundColor: "#f8fafc",
@@ -75,21 +75,21 @@ const ClientCallRow = ({ call }) => {
         },
       }}
     >
-      <TableCell>{call.id}</TableCell>
-      <TableCell>{call.call_id}</TableCell>
-      <TableCell>{getStatusLabel(call.call_status)}</TableCell>
-      <TableCell>{new Date(call.start_timestamp).toLocaleString()}</TableCell>
-      <TableCell>{new Date(call.end_timestamp).toLocaleString()}</TableCell>
-      <TableCell>{call.duration_ms}ms</TableCell>
-      <TableCell>{call.transcript}</TableCell>
-      <TableCell>{call.recording_url}</TableCell>
-      <TableCell>{call.customer_name}</TableCell>
-      <TableCell>{call.email_address}</TableCell>
-      <TableCell>{call.target_pest}</TableCell>
-      <TableCell>{new Date(call.scheduled_time).toLocaleString()}</TableCell>
-      <TableCell>{call.user_phone_number}</TableCell>
-      <TableCell>{call.user_address}</TableCell>
-      <TableCell>{call.call_type}</TableCell>
+      <TableCell>{call?.id}</TableCell>
+      <TableCell>{call?.call_id}</TableCell>
+      <TableCell>{getStatusLabel(call?.call_status)}</TableCell>
+      <TableCell>{new Date(call?.start_timestamp).toLocaleString()}</TableCell>
+      <TableCell>{new Date(call?.end_timestamp).toLocaleString()}</TableCell>
+      <TableCell>{call?.duration_ms}ms</TableCell>
+      <TableCell>{call?.transcript}</TableCell>
+      <TableCell>{call?.recording_url}</TableCell>
+      <TableCell>{call?.customer_name}</TableCell>
+      <TableCell>{call?.email_address}</TableCell>
+      <TableCell>{call?.target_pest}</TableCell>
+      <TableCell>{new Date(call?.scheduled_time).toLocaleString()}</TableCell>
+      <TableCell>{call?.user_phone_number}</TableCell>
+      <TableCell>{call?.user_address}</TableCell>
+      <TableCell>{call?.call_type}</TableCell>
       <TableCell
         sx={{
           maxWidth: "200px",
@@ -98,14 +98,16 @@ const ClientCallRow = ({ call }) => {
           whiteSpace: "nowrap",
         }}
       >
-        {call.call_summary}
+        <Tooltip title={call?.call_summary || ""} placement="top" arrow>
+          <div>{call?.call_summary}</div>
+        </Tooltip>
       </TableCell>
-      <TableCell>{call.user_sentiment}</TableCell>
-      <TableCell>{call.agent_task_completion_rating}</TableCell>
-      <TableCell>{call.call_completion_rating}</TableCell>
-      <TableCell>${call.combined_cost.toFixed(2)}</TableCell>
+      <TableCell>{call?.user_sentiment}</TableCell>
+      <TableCell>{call?.agent_task_completion_rating}</TableCell>
+      <TableCell>{call?.call_completion_rating}</TableCell>
+      <TableCell>${call?.combined_cost?.toFixed(2)}</TableCell>
       <TableCell>
-        {call.totalMinutes ? call.totalMinutes.toFixed(2) : "0.00"} mins
+        {call?.totalMinutes ? call?.totalMinutes.toFixed(2) : "0.00"} mins
       </TableCell>
     </TableRow>
   );
