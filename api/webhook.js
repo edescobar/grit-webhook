@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import supabase from "./supabaseClient"; // Asegúrate de que la ruta sea correcta.
+import supabase from "./supabaseClient";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -44,7 +44,6 @@ export default async function handler(req, res) {
         1000
       ).toFixed(0)} secs`;
 
-      // Intentar guardar en Supabase primero
       const { data: supabaseData, error: supabaseError } = await supabase
         .from("calls")
         .insert([
@@ -85,7 +84,6 @@ export default async function handler(req, res) {
           .json({ error: "Failed to save call data to Supabase" });
       }
 
-      // Continuar con el envío del email
       const emailContent = `
         <h1>Call Analysis Report</h1>
         <p><strong>Date & Time:</strong> ${startTime}</p>
