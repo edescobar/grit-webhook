@@ -353,6 +353,16 @@ module.exports = require("@supabase/supabase-js");
 
 /***/ }),
 
+/***/ "lodash":
+/*!*************************!*\
+  !*** external "lodash" ***!
+  \*************************/
+/***/ ((module) => {
+
+module.exports = require("lodash");
+
+/***/ }),
+
 /***/ "next/dist/compiled/next-server/pages.runtime.dev.js":
 /*!**********************************************************************!*\
   !*** external "next/dist/compiled/next-server/pages.runtime.dev.js" ***!

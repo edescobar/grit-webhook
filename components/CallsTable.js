@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import {
   Table,
@@ -14,9 +12,11 @@ import {
 } from "@mui/material";
 import supabase from "../utils/supabaseClient";
 import ClientCallRow from "./ClientCallRow";
+import _ from "lodash"; // Importando Lodash
 
 const CallsTable = () => {
   const [calls, setCalls] = useState([]);
+  const [columnNames, setColumnNames] = useState([]);
 
   useEffect(() => {
     const fetchCalls = async () => {
@@ -25,20 +25,25 @@ const CallsTable = () => {
         console.error("Error fetching calls:", error);
       } else {
         setCalls(data);
+        if (data.length > 0) {
+          setColumnNames(
+            Object.keys(data[0]).map((header) => _.startCase(header))
+          );
+        }
       }
     };
 
     fetchCalls();
-  }, [supabase]);
+  }, []);
 
   return (
     <Box
       sx={{
-        height: "calc(100vh - 48px)", // Full viewport height minus margins
+        height: "calc(100vh - 48px)",
         margin: "24px",
         display: "flex",
         flexDirection: "column",
-        backgroundColor: "#f8f9ff", // Light pastel blue background
+        backgroundColor: "#f8f9ff",
         padding: "24px",
         borderRadius: "16px",
         boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
@@ -66,151 +71,49 @@ const CallsTable = () => {
           },
         }}
       >
-        Calls Table
+        Retell Dashboard
       </Typography>
       <TableContainer
         component={Paper}
         elevation={0}
         sx={{
-          height: "100%",
+          maxHeight: "80vh",
+          overflow: "auto",
           borderRadius: "12px",
           border: "1px solid #e2e8f0",
           backgroundColor: "white",
-          "&::-webkit-scrollbar": {
-            width: "8px",
-            height: "8px",
-          },
-          "&::-webkit-scrollbar-track": {
-            backgroundColor: "#f1f1f1",
-            borderRadius: "4px",
-          },
-          "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "#a5b4fc",
-            borderRadius: "4px",
-            "&:hover": {
-              backgroundColor: "#8b5cf6",
-            },
-          },
         }}
       >
-        <Table stickyHeader aria-label="calls table">
+        <Table
+          stickyHeader
+          aria-label="calls table"
+          sx={{ minWidth: 750, width: "auto" }}
+        >
           <TableHead>
             <TableRow>
-              <TableCell
-                sx={{
-                  fontWeight: 600,
-                  backgroundColor: "#f8fafc",
-                  color: "#475569",
-                  borderBottom: "2px solid #e2e8f0",
-                }}
-              >
-                Call ID
-              </TableCell>
-              <TableCell
-                sx={{
-                  fontWeight: 600,
-                  backgroundColor: "#f8fafc",
-                  color: "#475569",
-                  borderBottom: "2px solid #e2e8f0",
-                }}
-              >
-                Status
-              </TableCell>
-              <TableCell
-                sx={{
-                  fontWeight: 600,
-                  backgroundColor: "#f8fafc",
-                  color: "#475569",
-                  borderBottom: "2px solid #e2e8f0",
-                }}
-              >
-                Start Time
-              </TableCell>
-              <TableCell
-                sx={{
-                  fontWeight: 600,
-                  backgroundColor: "#f8fafc",
-                  color: "#475569",
-                  borderBottom: "2px solid #e2e8f0",
-                }}
-              >
-                Duration
-              </TableCell>
-              <TableCell
-                sx={{
-                  fontWeight: 600,
-                  backgroundColor: "#f8fafc",
-                  color: "#475569",
-                  borderBottom: "2px solid #e2e8f0",
-                }}
-              >
-                Customer Name
-              </TableCell>
-              <TableCell
-                sx={{
-                  fontWeight: 600,
-                  backgroundColor: "#f8fafc",
-                  color: "#475569",
-                  borderBottom: "2px solid #e2e8f0",
-                }}
-              >
-                Cost
-              </TableCell>
-              <TableCell
-                sx={{
-                  fontWeight: 600,
-                  backgroundColor: "#f8fafc",
-                  color: "#475569",
-                  borderBottom: "2px solid #e2e8f0",
-                }}
-              >
-                Summary
-              </TableCell>
-              <TableCell
-                sx={{
-                  fontWeight: 600,
-                  backgroundColor: "#f8fafc",
-                  color: "#475569",
-                  borderBottom: "2px solid #e2e8f0",
-                }}
-              >
-                User Sentiment
-              </TableCell>
-              <TableCell
-                sx={{
-                  fontWeight: 600,
-                  backgroundColor: "#f8fafc",
-                  color: "#475569",
-                  borderBottom: "2px solid #e2e8f0",
-                }}
-              >
-                Call Successful
-              </TableCell>
-              <TableCell
-                sx={{
-                  fontWeight: 600,
-                  backgroundColor: "#f8fafc",
-                  color: "#475569",
-                  borderBottom: "2px solid #e2e8f0",
-                }}
-              >
-                Agent Task Completion
-              </TableCell>
-              <TableCell
-                sx={{
-                  fontWeight: 600,
-                  backgroundColor: "#f8fafc",
-                  color: "#475569",
-                  borderBottom: "2px solid #e2e8f0",
-                }}
-              >
-                Call Completion
-              </TableCell>
+              {columnNames.map((name) => (
+                <TableCell
+                  key={name}
+                  sx={{
+                    minWidth: 120,
+                    width: "auto",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    fontWeight: 600,
+                    backgroundColor: "#f8fafc",
+                    color: "#475569",
+                    borderBottom: "2px solid #e2e8f0",
+                  }}
+                >
+                  {name}
+                </TableCell>
+              ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {calls.map((call) => (
-              <ClientCallRow key={call.id} call={call} />
+            {calls.map((call, index) => (
+              <ClientCallRow key={index} call={call} />
             ))}
           </TableBody>
         </Table>
