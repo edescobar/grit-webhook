@@ -17,3 +17,21 @@ yarn-error.log*
 
 # MacOS
 .DS_Store
+
+# localhost-keys
+localhost-key.pem
+localhost-cert.pem
+
+# Next.js
+.next/
+out/
+.next/cache
+.next/static/development/_buildManifest.js
+.next/static/chunks/pages/
+.next/static/webpack/
+.next/server/pages/
+.next/static/chunks/
+.next/server/webpack-runtime.js
+
+# pnpm
+pnpm-lock.yaml
