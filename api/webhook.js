@@ -75,7 +75,7 @@ export default async function handler(req, res) {
         // Send the email using Resend
         await resend.emails.send({
           from: "noreply@resend.dev",
-          to: "santiago@sidetool.co",
+          to: ["sofia.etchepare@sidetool.co", "evy@gritppo.com"],
           subject: "Call Analysis Report",
           html: emailContent,
         });
