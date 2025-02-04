@@ -9,7 +9,7 @@ export default async function handler(req, res) {
         const { call_summary, custom_analysis_data } = call.call_analysis;
 
         // Email recipient and Loops.so API details
-        const recipient = ["recipient1@example.com", "recipient2@example.com"];
+        const recipient = "recipient1@example.com";
         const loopsApiKey = "your-loops-api-key"; // Replace with your Loops.so API key
         const campaignId = "your-campaign-id"; // Replace with your campaign ID
 
