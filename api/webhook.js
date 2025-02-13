@@ -75,8 +75,13 @@ export default async function handler(req, res) {
         // Send the email using Resend
         await resend.emails.send({
           from: "partner_va@gritppo.com",
-          to: ["sofia.etchepare@sidetool.co", "evy@gritppo.com", "santiago@sidetool.co", "megabee_va@gritppo.com"],
-          subject: "Call Analysis Report",
+          to: [
+            "sofia.etchepare@sidetool.co",
+            "evy@gritppo.com",
+            "santiago@sidetool.co",
+            "megabee_va@gritppo.com",
+          ],
+          subject: "Call Analysis Report for Mega Bee Rescues",
           html: emailContent,
         });
 
