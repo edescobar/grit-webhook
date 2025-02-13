@@ -26,6 +26,7 @@ export default async function handler(req, res) {
               user_phone_number = "N/A",
               user_address = "N/A",
               call_type = "N/A",
+              campaign_name,
             } = {},
             call_summary = "N/A",
             user_sentiment = "N/A",
@@ -75,8 +76,13 @@ export default async function handler(req, res) {
         // Send the email using Resend
         await resend.emails.send({
           from: "partner_va@gritppo.com",
-          to: ["sofia.etchepare@sidetool.co", "evy@gritppo.com", "santiago@sidetool.co", "megabee_va@gritppo.com"],
-          subject: "Call Analysis Report",
+          to: [
+            "sofia.etchepare@sidetool.co",
+            "evy@gritppo.com",
+            "santiago@sidetool.co",
+            "megabee_va@gritppo.com",
+          ],
+          subject: `Call Analysis Report for ${campaign_name}`,
           html: emailContent,
         });
 
