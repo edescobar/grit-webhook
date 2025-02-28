@@ -26,26 +26,38 @@ async function insertData(jsonData) {
   for (const service of services) {
     const { name: serviceName, enabled, pricing, protocols } = service;
 
-    const pricingInfo = JSON.stringify(pricing);
-    const protocolInfo = JSON.stringify(protocols["schedule"]);
+    // 🚀 **Ensure JSONB objects are stored properly**
+    let pricingInfo;
+    let protocolInfo;
+
+    try {
+      pricingInfo = Array.isArray(pricing) ? pricing : [];
+      protocolInfo = protocols?.schedule ? protocols.schedule : {};
+    } catch (err) {
+      console.error("Error parsing JSON:", err);
+      continue;
+    }
 
     const { data, error } = await supabase.from("partner_services").insert([
       {
         partner_id: _id,
         name,
-        address: addresses.join("; "), // Join addresses with semicolon
+        address: addresses.join("; "),
         number,
         website,
         email,
         service_name: serviceName,
         service_enabled: enabled,
-        pricing_info: pricingInfo,
-        protocol_info: protocolInfo,
+        pricing_info: pricingInfo, // ✅ This will now be stored as JSONB
+        protocol_info: protocolInfo, // ✅ This will now be stored as JSONB
       },
     ]);
 
-    if (error) console.error("Error inserting data:", error);
-    else console.log("Data inserted successfully:", data);
+    if (error) {
+      console.error("Error inserting data:", error);
+    } else {
+      console.log("Data inserted successfully:", data);
+    }
   }
 }
 
