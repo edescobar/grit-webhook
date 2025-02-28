@@ -18,7 +18,6 @@ async function fetchData() {
     console.error("Failed to fetch data:", error);
   }
 }
-
 async function insertData(jsonData) {
   const { _id, overview, services } = jsonData;
   const { name, addresses, number, website, email } = overview;
@@ -26,16 +25,25 @@ async function insertData(jsonData) {
   for (const service of services) {
     const { name: serviceName, enabled, pricing, protocols } = service;
 
-    // 🚀 **Ensure JSONB objects are stored properly**
-    let pricingInfo;
-    let protocolInfo;
+    let pricingInfo = Array.isArray(pricing) ? pricing : [];
+    let protocolInfo = protocols?.schedule ?? {};
 
-    try {
-      pricingInfo = Array.isArray(pricing) ? pricing : [];
-      protocolInfo = protocols?.schedule ? protocols.schedule : {};
-    } catch (err) {
-      console.error("Error parsing JSON:", err);
-      continue;
+    if (typeof pricingInfo === "string") {
+      try {
+        pricingInfo = JSON.parse(pricingInfo);
+      } catch (err) {
+        console.error("Error parsing pricing_info:", err);
+        pricingInfo = [];
+      }
+    }
+
+    if (typeof protocolInfo === "string") {
+      try {
+        protocolInfo = JSON.parse(protocolInfo);
+      } catch (err) {
+        console.error("Error parsing protocol_info:", err);
+        protocolInfo = {};
+      }
     }
 
     const { data, error } = await supabase.from("partner_services").insert([
@@ -48,8 +56,8 @@ async function insertData(jsonData) {
         email,
         service_name: serviceName,
         service_enabled: enabled,
-        pricing_info: pricingInfo, // ✅ This will now be stored as JSONB
-        protocol_info: protocolInfo, // ✅ This will now be stored as JSONB
+        pricing_info: pricingInfo,
+        protocol_info: protocolInfo,
       },
     ]);
 
