@@ -26,26 +26,30 @@ async function insertData(jsonData) {
   for (const service of services) {
     const { name: serviceName, enabled, pricing, protocols } = service;
 
-    const pricingInfo = JSON.stringify(pricing);
-    const protocolInfo = JSON.stringify(protocols["schedule"]);
+    // 📌 Aquí evitamos stringify y pasamos los objetos JSON directamente
+    const pricingInfo = pricing; // JSON puro
+    const protocolInfo = protocols.schedule; // JSON puro
 
     const { data, error } = await supabase.from("partner_services").insert([
       {
         partner_id: _id,
         name,
-        address: addresses.join("; "), // Join addresses with semicolon
+        address: addresses.join("; "),
         number,
         website,
         email,
         service_name: serviceName,
         service_enabled: enabled,
-        pricing_info: pricingInfo,
-        protocol_info: protocolInfo,
+        pricing_info: pricingInfo, // Ahora es un objeto JSON válido
+        protocol_info: protocolInfo, // Ahora es un objeto JSON válido
       },
     ]);
 
-    if (error) console.error("Error inserting data:", error);
-    else console.log("Data inserted successfully:", data);
+    if (error) {
+      console.error("Error inserting data:", error);
+    } else {
+      console.log("Data inserted successfully:", data);
+    }
   }
 }
 
