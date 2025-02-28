@@ -12,7 +12,9 @@
   "license": "ISC",
   "dependencies": {
     "@supabase/supabase-js": "^2.49.1",
+    "axios": "^1.8.1",
     "dotenv": "^16.4.7",
+    "express": "^4.21.2",
     "node-fetch": "^3.3.2",
     "resend": "^4.1.1"
   }
