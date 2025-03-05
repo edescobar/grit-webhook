@@ -48,7 +48,7 @@ export default async function handler(req, res) {
         <h1>Call Analysis Report</h1>
         <p><strong>Date & Time:</strong> ${startTime}</p>
         <p><strong>Call ID:</strong> ${call_id}</p>
-        <p><strong>Campaign Name:</strong> Mega Bee Rescues & Pest Control</p>
+        <p><strong>Campaign Name:</strong> Eco Pest Control</p>
         <p><strong>Customer Name:</strong> ${customer_name}</p>
         <p><strong>Phone Number:</strong> ${user_phone_number}</p>
         <p><strong>Email:</strong> ${email_address}</p>
@@ -79,9 +79,9 @@ export default async function handler(req, res) {
             "sofia.etchepare@sidetool.co",
             "evy@gritppo.com",
             "santiago@sidetool.co",
-            "megabee_va@gritppo.com",
+            "eco_pest_control_va@gritppo.com",
           ],
-          subject: "Call Analysis Report for Mega Bee Rescues",
+          subject: "Call Analysis Report for Eco Pest Control",
           html: emailContent,
         });
 
