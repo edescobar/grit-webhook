@@ -24,33 +24,63 @@ async function insertData(jsonData) {
       throw new Error("Missing service name in one of the services.");
     }
 
-    // Clean up pricing info
-    const pricingInfo = (pricing || []).map((p) => {
-      if (p.infoChart) {
-        p.infoChart = p.infoChart.map((chart) => {
-          const title = typeof chart.title === "string" ? stripHTML(chart.title) : chart.title;
-          let content = chart.content;
-          if (typeof content === "string") {
-            content = stripHTML(content);
-          }
-          return { ...chart, title, content };
-        });
-      }
-      return p;
-    });
-
-    // Clean up protocol info
-    const protocolInfo = protocols?.schedule || {};
-    if (protocolInfo.timeframes) {
-      protocolInfo.timeframes = protocolInfo.timeframes.map((tf) => {
-        if (typeof tf.content === "string") {
-          tf.content = stripHTML(tf.content);
+    // Clean up pricing info and flatten to a plain text string.
+    // Also, extract the technique from the pricing info when a chart title is "Services:".
+    let pricingInfo = pricing || [];
+    let techniqueText = "";
+    if (Array.isArray(pricingInfo)) {
+      pricingInfo = pricingInfo.map((pricingItem) => {
+        if (pricingItem.infoChart && Array.isArray(pricingItem.infoChart)) {
+          const chartsText = pricingItem.infoChart.map((chart) => {
+            const chartTitle =
+              typeof chart.title === "string"
+                ? stripHTML(chart.title)
+                : chart.title;
+            const chartContent =
+              typeof chart.content === "string"
+                ? stripHTML(chart.content)
+                : chart.content;
+            // Check if this chart contains the technique info.
+            if (
+              chartTitle.toLowerCase() === "services:" ||
+              chartTitle.toLowerCase() === "services"
+            ) {
+              techniqueText = chartContent;
+            }
+            if (chartTitle && chartContent) {
+              return `${chartTitle}: ${chartContent}`;
+            } else {
+              return chartTitle || chartContent || "";
+            }
+          });
+          return chartsText.join("\n");
         }
-        return tf;
+        return "";
       });
+      // Join all pricing items into one plain text string.
+      pricingInfo = pricingInfo.join("\n\n");
     }
 
-    // Insert into Supabase
+    // Clean up protocol info and flatten it to a plain text string.
+    let protocolInfo = protocols?.schedule || {};
+    if (typeof protocolInfo === "string") {
+      try {
+        protocolInfo = JSON.parse(protocolInfo);
+      } catch (err) {
+        throw new Error("Error parsing protocol info: " + err.message);
+      }
+    }
+    if (protocolInfo.timeframes && Array.isArray(protocolInfo.timeframes)) {
+      const timeframesText = protocolInfo.timeframes.map((tf) => {
+        if (typeof tf.content === "string") {
+          return stripHTML(tf.content);
+        }
+        return tf.content;
+      });
+      protocolInfo = timeframesText.join("\n");
+    }
+
+    // Insert into Supabase (including the new "technique" column)
     const { error } = await supabase.from("partner_services").insert([
       {
         partner_id: _id,
@@ -63,6 +93,7 @@ async function insertData(jsonData) {
         service_enabled: options.enabled,
         pricing_info: pricingInfo,
         protocol_info: protocolInfo,
+        technique: techniqueText, // new column with the extracted technique info
       },
     ]);
 
@@ -86,7 +117,9 @@ export default async function handler(req, res) {
     // Fetch data from the given URL
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error(`Fetch error: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Fetch error: ${response.status} - ${response.statusText}`
+      );
     }
 
     // Parse JSON
