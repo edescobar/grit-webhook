@@ -78,12 +78,7 @@ export default async function handler(req, res) {
       try {
         await resend.emails.send({
           from: "partner_va@gritppo.com",
-          to: [
-            "sofia.etchepare@sidetool.co",
-            "evy@gritppo.com",
-            "santiago@sidetool.co",
-            "eco_pest_control_va@gritppo.com",
-          ],
+          to: ["sofia.etchepare@sidetool.co", "santiago@sidetool.co"],
           subject: "Call Analysis Report for Eco Pest Control",
           html: emailContent,
         });
