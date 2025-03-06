@@ -3,11 +3,15 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async function handler(req, res) {
+  console.log("Incoming request with method:", req.method);
+
   if (req.method === "POST") {
     const payload = req.body;
-    console.log(JSON.stringify(payload));
+    console.log("Received payload:", JSON.stringify(payload));
 
     if (payload.event === "call_analyzed") {
+      console.log("Processing 'call_analyzed' event");
+
       const {
         call: {
           call_id,
@@ -72,7 +76,6 @@ export default async function handler(req, res) {
       `;
 
       try {
-        // Send the email using Resend
         await resend.emails.send({
           from: "partner_va@gritppo.com",
           to: [
@@ -89,10 +92,13 @@ export default async function handler(req, res) {
       } catch (error) {
         console.error("Error sending email:", error);
       }
+    } else {
+      console.log("Unhandled event type:", payload.event);
     }
 
     res.status(200).send("Webhook processed");
   } else {
+    console.log("Invalid request method:", req.method);
     res.status(404).send("Not Found");
   }
 }
